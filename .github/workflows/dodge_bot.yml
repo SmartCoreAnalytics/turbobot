@@ -2,9 +2,9 @@ name: Dodge Bot Daily
 
 on:
   schedule:
-      - cron: '*/5 * * * *'  # Каждые 5 минут (ТЕСТ)
-    - cron: '0 7 * * *'   # 10:00 Moscow Time (7:00 UTC) - Утро
-    - cron: '0 16 * * *'  # 19:00 Moscow Time (16:00 UTC) - Вечер
+    - cron: '*/5 * * * *'  # Каждые 5 минут (ТЕСТ)
+    - cron: '0 7 * * *'    # 10:00 Moscow Time (7:00 UTC) - Утро
+    - cron: '0 16 * * *'   # 19:00 Moscow Time (16:00 UTC) - Вечер
   workflow_dispatch:
 
 jobs:
