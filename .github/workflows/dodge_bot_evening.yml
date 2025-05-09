@@ -2,7 +2,7 @@ name: Dodge Bot Evening
 
 on:
   schedule:
-    - cron: '*/5 * * * *'    # 19:00 Moscow Time (16:00 UTC)
+    - cron: '0 16 * * *'    # 19:00 Moscow Time (16:00 UTC)
   workflow_dispatch:
 
 jobs:
