@@ -8,7 +8,7 @@ from telegram import Bot
 TOKEN = os.getenv('TELEGRAM_TOKEN')
 CHAT_ID = -1002593973702
 THREAD_ID = 3
-USERNAME = '@S0188o'
+USERNAME = os.getenv('TELEGRAM_USERNAME')
 
 IMAGES_FOLDER = 'images'
 
