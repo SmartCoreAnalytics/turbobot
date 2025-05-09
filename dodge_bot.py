@@ -1,17 +1,16 @@
 import os
 import random
+import sys
 from telegram import Bot
 
 # === НАСТРОЙКИ ===
 TOKEN = '7831354259:AAE5ppiWjYJKl-MooewWxbvGwKAp2gTNXtM'
 CHAT_ID = -1002593973702
 THREAD_ID = 3
-USERNAME = '@S0188o'  # Никнейм для упоминания
+USERNAME = '@S0188o'
 
-# === ПУТЬ К ПАПКЕ С КАРТИНКАМИ ===
 IMAGES_FOLDER = 'images'
 
-# === УТРЕННИЕ СООБЩЕНИЯ ===
 MORNING_MESSAGES = [
     "🚗 **Dodge Challenger Check-in**\nЧто сделал вчера для своей мечты? Что сегодня планируешь сделать?\nКаждая задача приближает к реву мотора Dodge.",
     "🏎 **Утренний разгон**\nВчерашний вклад? Сегодняшний план?\nChallenger ждёт тех, кто не тормозит.",
@@ -45,7 +44,6 @@ MORNING_MESSAGES = [
     "🛞 **Цель на горизонте**\nЧто сделал вчера? Что сегодня планируешь?\nНе тормози – Dodge близко."
 ]
 
-# === ВЕЧЕРНИЕ МОТИВАШКИ ===
 EVENING_MOTIVATIONS = [
     "🚗 Пока ты сидишь сложа руки – другие забирают свои Dodge. Время действовать.",
     "🏎 Не забывай: Challenger ждёт не мечтателей, а тех, кто двигается.",
@@ -79,25 +77,25 @@ EVENING_MOTIVATIONS = [
     "🚗 Challenger не для тех, кто отлынивает. Соберись."
 ]
 
-# === СОЗДАЁМ БОТА ===
 bot = Bot(token=TOKEN)
 
-# === ВЫБИРАЕМ, ЧТО ОТПРАВИТЬ ===
 def main():
-    from datetime import datetime
-    hour = datetime.utcnow().hour + 3  # Moscow Time (UTC+3)
+    if len(sys.argv) < 2:
+        print("⚠️ Ошибка: нужно указать аргумент 'morning' или 'evening'.")
+        return
 
-    if hour == 10:
+    mode = sys.argv[1].lower()
+
+    if mode == 'morning':
         message = random.choice(MORNING_MESSAGES)
-    elif hour == 19:
+    elif mode == 'evening':
         message = random.choice(EVENING_MOTIVATIONS)
     else:
-        print("⏰ Не время отправки. Завершаем.")
+        print("⚠️ Ошибка: аргумент должен быть 'morning' или 'evening'.")
         return
 
     message_with_tag = f"{USERNAME} {message}"
 
-    # Получаем случайное фото из папки
     images = [os.path.join(IMAGES_FOLDER, img) for img in os.listdir(IMAGES_FOLDER) if img.lower().endswith(('.jpg', '.jpeg', '.png'))]
     if not images:
         print("⚠️ Нет доступных изображений в папке.")
@@ -114,9 +112,9 @@ def main():
                 caption=message_with_tag,
                 parse_mode='Markdown'
             )
-        print(f"✅ Сообщение отправлено с фото: {photo_path}")
+        print(f"✅ Сообщение ({mode}) отправлено с фото: {photo_path}")
     except Exception as e:
-        print(f"⚠️ Ошибка при отправке сообщения: {e}")
+        print(f"⚠️ Ошибка при отправке ({mode}): {e}")
 
 if __name__ == '__main__':
     main()
