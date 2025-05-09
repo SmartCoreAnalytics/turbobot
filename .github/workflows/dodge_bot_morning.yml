@@ -24,3 +24,4 @@ jobs:
         run: python dodge_bot.py morning
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_USERNAME: ${{ secrets.TELEGRAM_USERNAME }}
