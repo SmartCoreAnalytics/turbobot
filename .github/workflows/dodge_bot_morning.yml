@@ -22,3 +22,5 @@ jobs:
 
       - name: Run Morning Bot
         run: python dodge_bot.py morning
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
