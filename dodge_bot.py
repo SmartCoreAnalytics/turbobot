@@ -5,7 +5,7 @@ import asyncio
 from telegram import Bot
 
 # === НАСТРОЙКИ ===
-TOKEN = '7831354259:AAE5ppiWjYJKl-MooewWxbvGwKAp2gTNXtM'
+TOKEN = os.getenv('TELEGRAM_TOKEN')
 CHAT_ID = -1002593973702
 THREAD_ID = 3
 USERNAME = '@S0188o'
