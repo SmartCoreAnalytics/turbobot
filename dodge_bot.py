@@ -133,7 +133,7 @@ async def main():
     elif mode == 'evening':
         message = random.choice(EVENING_MOTIVATIONS)
     elif mode == 'push':
-    message = random.choice(MOTIVATIONAL_PUSHES)
+        message = random.choice(MOTIVATIONAL_PUSHES)
     else:
         print("⚠️ Ошибка: аргумент должен быть 'morning' или 'evening'.")
         return
