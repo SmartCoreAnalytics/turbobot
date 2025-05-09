@@ -1,6 +1,4 @@
-import time
-import threading
-import schedule
+import os
 import random
 from telegram import Bot
 
@@ -10,13 +8,8 @@ CHAT_ID = -1002593973702
 THREAD_ID = 3
 USERNAME = '@S0188o'  # Никнейм для упоминания
 
-# === СПИСОК КАРТИНОК (ПО URL) ===
-IMAGES = [
-    'https://example.com/dodge1.jpg',
-    'https://example.com/dodge2.jpg',
-    'https://example.com/dodge3.jpg',
-    # Добавь сюда ещё ссылки на фотки
-]
+# === ПУТЬ К ПАПКЕ С КАРТИНКАМИ ===
+IMAGES_FOLDER = 'images'
 
 # === УТРЕННИЕ СООБЩЕНИЯ ===
 MORNING_MESSAGES = [
@@ -89,49 +82,41 @@ EVENING_MOTIVATIONS = [
 # === СОЗДАЁМ БОТА ===
 bot = Bot(token=TOKEN)
 
-# === УТРЕННЯЯ ОТПРАВКА ===
-def send_morning_message():
-    message = random.choice(MORNING_MESSAGES)
+# === ВЫБИРАЕМ, ЧТО ОТПРАВИТЬ ===
+def main():
+    from datetime import datetime
+    hour = datetime.utcnow().hour + 3  # Moscow Time (UTC+3)
+
+    if hour == 10:
+        message = random.choice(MORNING_MESSAGES)
+    elif hour == 19:
+        message = random.choice(EVENING_MOTIVATIONS)
+    else:
+        print("⏰ Не время отправки. Завершаем.")
+        return
+
     message_with_tag = f"{USERNAME} {message}"
-    photo_url = random.choice(IMAGES)
+
+    # Получаем случайное фото из папки
+    images = [os.path.join(IMAGES_FOLDER, img) for img in os.listdir(IMAGES_FOLDER) if img.lower().endswith(('.jpg', '.jpeg', '.png'))]
+    if not images:
+        print("⚠️ Нет доступных изображений в папке.")
+        return
+
+    photo_path = random.choice(images)
+
     try:
-        bot.send_photo(
-            chat_id=CHAT_ID,
-            message_thread_id=THREAD_ID,
-            photo=photo_url,
-            caption=message_with_tag,
-            parse_mode='Markdown'
-        )
-        print("✅ Утреннее сообщение отправлено!")
+        with open(photo_path, 'rb') as photo:
+            bot.send_photo(
+                chat_id=CHAT_ID,
+                message_thread_id=THREAD_ID,
+                photo=photo,
+                caption=message_with_tag,
+                parse_mode='Markdown'
+            )
+        print(f"✅ Сообщение отправлено с фото: {photo_path}")
     except Exception as e:
-        print(f"⚠️ Ошибка при отправке утреннего сообщения: {e}")
-
-# === ВЕЧЕРНЯЯ ОТПРАВКА ===
-def send_evening_motivation():
-    message = random.choice(EVENING_MOTIVATIONS)
-    message_with_tag = f"{USERNAME} {message}"
-    photo_url = random.choice(IMAGES)
-    try:
-        bot.send_photo(
-            chat_id=CHAT_ID,
-            message_thread_id=THREAD_ID,
-            photo=photo_url,
-            caption=message_with_tag,
-            parse_mode='Markdown'
-        )
-        print("✅ Вечерняя мотивашка отправлена!")
-    except Exception as e:
-        print(f"⚠️ Ошибка при отправке вечерней мотивашки: {e}")
-
-# === ПЛАНИРОВЩИК ===
-schedule.every().day.at("10:00").do(send_morning_message)
-schedule.every().day.at("19:00").do(send_evening_motivation)
-
-def run_scheduler():
-    while True:
-        schedule.run_pending()
-        time.sleep(30)
+        print(f"⚠️ Ошибка при отправке сообщения: {e}")
 
 if __name__ == '__main__':
-    print("🚀 Бот запущен и ждёт отправки сообщений...")
-    threading.Thread(target=run_scheduler).start()
+    main()
