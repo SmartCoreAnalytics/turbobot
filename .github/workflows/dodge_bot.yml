@@ -8,7 +8,7 @@ on:
 
 jobs:
   send_morning:
-    if: github.event.schedule == '0 7 * * *'
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.schedule == '0 7 * * *' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -26,7 +26,7 @@ jobs:
         run: python dodge_bot.py morning
 
   send_evening:
-    if: github.event.schedule == '0 16 * * *'
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.schedule == '0 16 * * *' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
